@@ -73,8 +73,7 @@ def main(args):
         shuffle=True, drop_last=True,
         num_workers=8, pin_memory=args.gpu,
     )
-    # we don't really have a validation set here, but for visualization let us
-    # just take the first couple images from the dataset
+    
     val_loader = torch.utils.data.DataLoader(train_set, shuffle=False, batch_size=8*8)
 
     if args.n > 0:
@@ -153,8 +152,6 @@ def main(args):
 
         # visualize reconstructions
         rec = model_generator(Variable(maybe_cuda(torch.FloatTensor(Z[idx_val.numpy()]))))
-        np.save('tmp.npy',rec.detach())
-        np.save(Data_dir+'Z_%s_%s_rec_epoch_%03d_%s' % (args.cl,args.prfx,epoch,args.init), Z)
         utils.imsave(Img_dir+'%s_%s_rec_epoch_%03d_%s.png' % (args.cl,args.prfx,epoch, args.init),
                make_grid(rec.data.cpu() / 2. + 0.5, nrow=8).numpy().transpose(1, 2, 0))
     print('Saving the model : epoch % 3d'%epoch)
